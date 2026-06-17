@@ -1,0 +1,20 @@
+README.md
+  h_05b45a428d6a9a 194,207,216
+install-wsl.sh
+  h_05b45a428d6a9a 18
+install.sh
+  h_05b45a428d6a9a 17
+install.ps1
+  h_05b45a428d6a9a 21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "b1613d5973bf4e9421b77787b08ed80898534136",
+  "prompts": {},
+  "humans": {
+    "h_05b45a428d6a9a": {
+      "author": "邓智 <dengzhi@gofo.com>"
+    }
+  }
+}
