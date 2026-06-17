@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+SAFETY_CONTENT='<gfeu-code-copilot-safety-rules>
+你的环境中已安装 gfeu-code-copilot 编码协作框架。以下安全规则始终生效：
+
+<HARD-GATE>
+Standard/Complex 档：/propose 未完成且用户未确认前，禁止任何编码动作。
+Quick 档：必须先说明变更范围（涉及文件 + 预期改动），用户确认后才执行。
+任何档位：涉及资金/状态流转/权限变更，必须高亮提醒，等待人工确认后才能继续。
+不确定档位时，默认走 Standard。
+</HARD-GATE>
+
+安全红线（始终生效）：
+- 禁止在代码中硬编码密钥、AK/SK、数据库密码
+- 禁止在日志中打印手机号、身份证、银行卡等敏感信息
+- 涉及资金变更的逻辑必须人工审查后方可编码
+- 涉及状态流转必须检查状态机合法性
+- 涉及权限变更必须显式校验操作人权限
+
+可用命令：init / brainstorm / propose / apply / fix / review / test / archive
+如需完整框架能力，请说"帮我实现..."或直接调用命令名触发 gfeu-code-copilot skill。
+</gfeu-code-copilot-safety-rules>'
+
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+# ============ 版本检查（非阻断，失败全静默）============
+# 本次会话仅做纯本地比对（HEAD vs 上游 tracking ref），零网络延迟；
+# 同时后台节流 fetch（4h 一次）刷新 tracking ref，供下次会话比对。
+VERSION_NOTICE=""
+STAMP="${HOME}/.claude/.gfeu-code-copilot-fetch-stamp"
+if command -v git >/dev/null 2>&1 && git -C "$PLUGIN_ROOT" rev-parse --git-dir >/dev/null 2>&1; then
+    now=$(date +%s)
+    last=0
+    if [ -f "$STAMP" ]; then
+        s=$(cat "$STAMP" 2>/dev/null || true)
+        case "$s" in (*[!0-9]*|'') last=0 ;; (*) last="$s" ;; esac
+    fi
+    if [ $(( now - last )) -gt 14400 ]; then
+        ( git -C "$PLUGIN_ROOT" fetch --quiet >/dev/null 2>&1; echo "$now" > "$STAMP" ) </dev/null >/dev/null 2>&1 &
+        disown 2>/dev/null || true
+    fi
+    local_rev=$(git -C "$PLUGIN_ROOT" rev-parse HEAD 2>/dev/null || true)
+    upstream_rev=$(git -C "$PLUGIN_ROOT" rev-parse '@{u}' 2>/dev/null || true)
+    if [ -n "$local_rev" ] && [ -n "$upstream_rev" ] && [ "$local_rev" != "$upstream_rev" ] \
+       && git -C "$PLUGIN_ROOT" merge-base --is-ancestor "$local_rev" "$upstream_rev" 2>/dev/null; then
+        VERSION_NOTICE='
+
+<gfeu-code-copilot-update-notice>
+检测到 gfeu-code-copilot 框架有新版本（本地已落后于远程）。建议更新后再继续：
+  bash ~/.claude/gfeu-code-copilot/install.sh
+仅提醒，不影响当前会话；如需了解更新内容可查看仓库提交记录。
+</gfeu-code-copilot-update-notice>'
+    fi
+fi
+
+escaped=$(escape_for_json "${SAFETY_CONTENT}${VERSION_NOTICE}")
+
+printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$escaped"
+
+exit 0
