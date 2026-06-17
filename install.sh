@@ -14,7 +14,7 @@
 set -euo pipefail
 
 # ============ 配置 ============
-REPO_URL="${CODE_COPILOT_REPO:-https://git.eminxing.com/ai/gfeu-code-copilot.git}"
+REPO_URL="${CODE_COPILOT_REPO:-https://github.com/dengzhi5/dz-code-copilot.git}"
 INSTALL_DIR="$HOME/.claude/gfeu-code-copilot"
 SKILLS_DIR="$HOME/.claude/skills"
 SKILL_LINK="$SKILLS_DIR/gfeu-code-copilot"

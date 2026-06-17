@@ -191,7 +191,7 @@ AI：好的，我来提两个方案...
 
 ```bash
 # 一行安装（clone 到 ~/.claude/gfeu-code-copilot，注册 skill + hook）
-curl -fsSL https://git.eminxing.com/ai/gfeu-code-copilot/raw/master/install.sh | bash
+curl -fsSL https://github.com/dengzhi5/dz-code-copilot/blob/main/install.sh | bash
 ```
 
 安装完成后，在任意后端项目中打开 Claude Code，说：
@@ -204,7 +204,7 @@ curl -fsSL https://git.eminxing.com/ai/gfeu-code-copilot/raw/master/install.sh |
 >
 > **手动安装：**
 > ```bash
-> git clone https://git.eminxing.com/ai/gfeu-code-copilot.git ~/.claude/gfeu-code-copilot
+> git clone https://github.com/dengzhi5/dz-code-copilot.git ~/.claude/gfeu-code-copilot
 > bash ~/.claude/gfeu-code-copilot/install.sh
 > ```
 
@@ -213,7 +213,7 @@ curl -fsSL https://git.eminxing.com/ai/gfeu-code-copilot/raw/master/install.sh |
 在 **PowerShell** 中执行（需已安装 [Git for Windows](https://git-scm.com)）：
 
 ```powershell
-irm https://git.eminxing.com/ai/gfeu-code-copilot/raw/master/install.ps1 | iex
+irm https://github.com/dengzhi5/dz-code-copilot/blob/main/install.ps1 | iex
 ```
 
 > 脚本使用目录 Junction 替代 symlink，无需开发者模式，也无需管理员权限。

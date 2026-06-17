@@ -15,7 +15,7 @@
 
 set -euo pipefail
 
-REPO_URL="${CODE_COPILOT_REPO:-https://git.eminxing.com/ai/gfeu-code-copilot.git}"
+REPO_URL="${CODE_COPILOT_REPO:-https://github.com/dengzhi5/dz-code-copilot.git}"
 
 # ============ 颜色 ============
 if [ -t 1 ]; then

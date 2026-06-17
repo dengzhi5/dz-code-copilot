@@ -18,7 +18,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
 # ============ 配置 ============
-$RepoUrl    = if ($env:CODE_COPILOT_REPO) { $env:CODE_COPILOT_REPO } else { "https://git.eminxing.com/ai/gfeu-code-copilot.git" }
+$RepoUrl    = if ($env:CODE_COPILOT_REPO) { $env:CODE_COPILOT_REPO } else { "https://github.com/dengzhi5/dz-code-copilot.git" }
 $InstallDir = Join-Path $env:USERPROFILE ".claude\gfeu-code-copilot"
 $SkillsDir  = Join-Path $env:USERPROFILE ".claude\skills"
 $SkillLink  = Join-Path $SkillsDir "gfeu-code-copilot"
